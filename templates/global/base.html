@@ -4,9 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ToDo List</title>
-    {% load static %}  <!-- Load static files here -->
-    
-    <!-- Link to the static CSS file -->
+
+    {% load static %}
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 <body>
@@ -20,14 +19,24 @@
                     <th>Title</th>
                     <th>Description</th>
                     <th>State</th>
+                    <th>Created at</th>
+                    <th>Updated at</th>
+                    <th>Author</th>
                 </tr>
             </thead>
             <tbody>
                 {% for todo in todos%}
                 <tr>
                     <td> {{ todo.title }}</td>
-                    <td>{{ todo.description }}</td>
-                    <td> {{todo.state }}</td>
+                    {% if todo.description %}
+                        <td>{{ todo.description }}</td>
+                    {% else %}
+                        <td></td>
+                    {% endif %}
+                    <td> {{todo.get_state_display }}</td>
+                    <td> {{ todo.created_at }}</td>
+                    <td> {{ todo.updated_at }}</td>
+                    <td> {{ todo.author }}</td>
                 </tr>
                 {% endfor %}
             </tbody>

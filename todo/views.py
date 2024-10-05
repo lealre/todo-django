@@ -1,19 +1,11 @@
 from django.shortcuts import render
 
-from django.http import HttpResponse
+from .models import Todo
 
 
 def home(requests):
 
-    todos = [
-        {
-            'title': f'Todo {n}',
-            'description': f'Some task to do  {n}',
-            'state': 'Pending'
-        }
-        for n in range(10)
-    ]
-
+    todos = Todo.objects.all()
 
     return render(
         requests,
