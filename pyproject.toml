@@ -10,6 +10,56 @@ python = "3.12.*"
 django = "^5.1.1"
 
 
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.6.9"
+pytest = "^8.3.3"
+pytest-django = "^4.9.0"
+taskipy = "^1.13.0"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+line-length = 79
+extend-exclude = [
+    'project/settings.py', 
+    'migrations',
+    'manage.py'
+]
+
+[tool.ruff.lint]
+preview = true
+select = ['I', 'F', 'E', 'W', 'PL', 'PT']
+ignore = ['PT009',  'PT027' ]
+
+[tool.ruff.format]
+preview = true
+quote-style = 'single'
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = 'project.settings'
+python_files = [
+  'test.py', 
+  'tests.py', 
+  'test_*.py', 
+  'tests_*.py', 
+  '*_test.py', 
+  '*_tests.py'
+]
+
+addopts = [
+  "--doctest-modules",
+  "--strict-markers",
+  # "-rP",
+  "-p no:warnings"
+]
+
+markers = [
+  "slow: Run tests that are slow",
+  "fast: Run fast tests"
+]
+
+[tool.taskipy.tasks]
+lint = 'ruff check . && ruff check . --diff'
+format = 'ruff check . --fix && ruff format .'

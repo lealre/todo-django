@@ -33,6 +33,12 @@
                     {% else %}
                         <td></td>
                     {% endif %}
+                    {% comment %} <td>
+                        <select>
+                            <option value="to_do" {% if todo.state == 'to_do' %}selected{% endif %}>To Do</option>
+                            <option value="done" {% if todo.state == 'done' %}selected{% endif %}>Done</option>
+                        </select>
+                    </td> {% endcomment %}
                     <td> {{todo.get_state_display }}</td>
                     <td> {{ todo.created_at }}</td>
                     <td> {{ todo.updated_at }}</td>
