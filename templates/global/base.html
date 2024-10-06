@@ -1,53 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ToDo List</title>
 
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+<head>
+    {% include 'todo/partials/head.html' %}
+    <title>{% block title %}{% endblock title %} ToDo</title>
 </head>
+
 <body>
 
-    <div class="main"> 
-        <h1>To-Do List</h1>
-
-        <table>
-            <thead>
-                <tr>
-                    <th>Title</th>
-                    <th>Description</th>
-                    <th>State</th>
-                    <th>Created at</th>
-                    <th>Updated at</th>
-                    <th>Author</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for todo in todos%}
-                <tr>
-                    <td> {{ todo.title }}</td>
-                    {% if todo.description %}
-                        <td>{{ todo.description }}</td>
-                    {% else %}
-                        <td></td>
-                    {% endif %}
-                    {% comment %} <td>
-                        <select>
-                            <option value="to_do" {% if todo.state == 'to_do' %}selected{% endif %}>To Do</option>
-                            <option value="done" {% if todo.state == 'done' %}selected{% endif %}>Done</option>
-                        </select>
-                    </td> {% endcomment %}
-                    <td> {{todo.get_state_display }}</td>
-                    <td> {{ todo.created_at }}</td>
-                    <td> {{ todo.updated_at }}</td>
-                    <td> {{ todo.author }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+    <main>
+        {% block content %}{% endblock content %}
+    </main>
 
 </body>
+
+
 </html>

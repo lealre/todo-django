@@ -35,3 +35,12 @@ tr:nth-child(even) {
 .state-pending {
     color: red;
 }
+
+/* .main-content-container {
+
+} */
+
+.strikethrough {
+    text-decoration: line-through;
+    color: gray; /* Optional: Change the color for better visibility */
+}
