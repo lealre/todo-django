@@ -23,6 +23,8 @@
                 {% endfor %}
             </div>
 
+            <input type="hidden" name="username" value="{{ request.user.username }}">
+
             <button type="submit">Send</button>
         </form>
 

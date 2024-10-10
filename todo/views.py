@@ -1,5 +1,6 @@
 from django.contrib import messages
-from django.http import HttpResponseBadRequest
+from django.http import HttpResponseBadRequest, HttpResponse
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 
 from todo.models import Todo, User
@@ -7,7 +8,12 @@ from todo.forms import TodoForm
 
 
 def home(request):
-    todos = Todo.objects.all()
+    return HttpResponse('To Do: Home View')
+
+
+@login_required(login_url='users:login', redirect_field_name='next')
+def todo_view(request):
+    todos = Todo.objects.filter(author__username=request.user.username)
 
     form = TodoForm()
     todo_form_data = request.session.get('todo_form_data', None)
@@ -21,30 +27,27 @@ def home(request):
             'form': form
         })
 
-
+@login_required(login_url='users:login', redirect_field_name='next')
 def create_todo(request):
     if not request.POST:
           return HttpResponseBadRequest('Invalid request method.')
+    
+    current_user = request.user
     
     POST = request.POST
     request.session['todo_form_data'] = POST
     form = TodoForm(POST)
 
     if form.is_valid():
-            # Don't commit yet; we will assign a mock author
         todo = form.save(commit=False)
-
-        # Fetch a "mock" author from the database (example: first user)
-        mock_author = User.objects.first()  # You can choose any logic here
-        
-        # Assign the "mock" author
-        todo.author = mock_author
-
+        todo.author = current_user
         form.save()
+
         messages.success(request, 'ToDo added to List')
+
         del request.session['todo_form_data']
     
-    return redirect('todo:home')
+    return redirect('todo:todo_list')
 
 
 def update_todo_state(request):
@@ -56,7 +59,7 @@ def update_todo_state(request):
             todo = Todo.objects.get(id=todo_id)
             todo.state = new_state
             todo.save()
-            return redirect('todo:home')
+            return redirect('todo:todo_list')
         except Todo.DoesNotExist:
             return HttpResponseBadRequest('Todo not found.')
 
