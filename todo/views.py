@@ -1,17 +1,14 @@
 from django.contrib import messages
-from django.http import HttpResponseBadRequest, HttpResponse
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseBadRequest
 from django.shortcuts import redirect, render
 
-from todo.models import Todo, User
 from todo.forms import TodoForm
+from todo.models import Todo
 
 
 def home(request):
-    return render(
-        request,
-        'todo/pages/home.html'
-    )
+    return render(request, 'todo/pages/home.html')
 
 
 @login_required(login_url='users:login', redirect_field_name='next')
@@ -23,20 +20,19 @@ def todo_view(request):
     form = TodoForm(todo_form_data)
 
     return render(
-        request, 
-        'todo/pages/todo_view.html', 
-        context={
-            'todos': todos,
-            'form': form
-        })
+        request,
+        'todo/pages/todo_view.html',
+        context={'todos': todos, 'form': form},
+    )
+
 
 @login_required(login_url='users:login', redirect_field_name='next')
 def create_todo(request):
     if not request.POST:
-          return HttpResponseBadRequest('Invalid request method.')
-    
+        return HttpResponseBadRequest('Invalid request method.')
+
     current_user = request.user
-    
+
     POST = request.POST
     request.session['todo_form_data'] = POST
     form = TodoForm(POST)
@@ -49,7 +45,7 @@ def create_todo(request):
         messages.success(request, 'ToDo added to List')
 
         del request.session['todo_form_data']
-    
+
     return redirect('todo:todo_list')
 
 
