@@ -8,7 +8,10 @@ from todo.forms import TodoForm
 
 
 def home(request):
-    return HttpResponse('To Do: Home View')
+    return render(
+        request,
+        'todo/pages/home.html'
+    )
 
 
 @login_required(login_url='users:login', redirect_field_name='next')
@@ -21,7 +24,7 @@ def todo_view(request):
 
     return render(
         request, 
-        'todo/pages/home.html', 
+        'todo/pages/todo_view.html', 
         context={
             'todos': todos,
             'form': form

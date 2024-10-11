@@ -6,28 +6,11 @@
 {% block content %}
 
     <div>
-
-        <h1>To-Do List</h1>
-
-        {% include 'todo/partials/todo_table.html' %}
-
-        <form action="{% url 'todo:create' %}" method="post">
-            {% csrf_token %}
-            <div class="form-group">
-                {% for field in form %}
-
-                    <label for="{{ field.id_for_label }}">{{ field.label }}:</label>
-                    {{ field }}
-                    {{ field.errors }}
-
-                {% endfor %}
-            </div>
-
-            <input type="hidden" name="username" value="{{ request.user.username }}">
-
-            <button type="submit">Send</button>
-        </form>
-
+        <h1>This is the Home</h1>
+        <h1>You are not Logged In</h1>
     </div>
+
+    {% include "global/partials/messages.html" %}
+
 {% endblock content %}
 

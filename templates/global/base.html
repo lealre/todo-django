@@ -8,7 +8,9 @@
 
 <body>
 
-    <main>
+    {% include 'global/partials/header.html'%}
+
+    <main class="main-content-container">
         {% block content %}{% endblock content %}
     </main>
 
