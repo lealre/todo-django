@@ -1,28 +1,40 @@
 <header class="main-header-container">
-    <div class="main-header container">
 
+    <div class="main-header container">
         <h1>
             <a class="main-logo" href="{% url 'todo:home' %}">
                 <span class="main-logo-text">My Todos</span>
             </a>
         </h1>
 
-        <div class="header-buttons" >
-        {% if request.user.is_authenticated %}
-            <form class="logout-form" method="POST" action="{% url 'users:logout' %}" style="display: inline;">
-                {% csrf_token %}
-                <input type="hidden" name="username" value="{{ request.user.username }}">
-                <button type="submit" class="logout-button">
-                    Logout
-                </button>
-            </form>
-        {% else %}
-            <a class="logout-button" href="{% url 'users:login' %}">
-                Login
-            </a>
-        {% endif %}
+            <div class="header-buttons-container" >
+  
+                {% if request.user.is_authenticated %}
+
+                    <a class="header-button" href="{% url 'todo:todo_list' %}">
+                        My todo list
+                    </a>
+                    <form class="logout-form" method="POST" action="{% url 'users:logout' %}" style="display: inline;">
+                        {% csrf_token %}
+                        <input type="hidden" name="username" value="{{ request.user.username }}">
+                        <button type="submit" class="header-button">
+                            Logout
+                        </button>
+                    </form>
+
+
+                {% elif request.path == '/users/login/'%}
+                    <a class="header-button" href="{% url 'users:login' %}">
+                        &nbsp;  <!-- Non-breaking space to keep the link's size -->
+                    </a>
+                {% else %}
+                    <a class="header-button" href="{% url 'users:login' %}">
+                        Login
+                    </a>
+                {% endif %}
+
 
         </div>
-
     </div>
+
 </header>

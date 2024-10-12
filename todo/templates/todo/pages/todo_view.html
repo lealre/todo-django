@@ -7,8 +7,6 @@
 
     <div>
 
-        <h1>To-Do List</h1>
-
         {% include 'todo/partials/todo_table.html' %}
 
         <form action="{% url 'todo:create' %}" method="post">
