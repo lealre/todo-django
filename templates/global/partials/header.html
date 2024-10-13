@@ -17,6 +17,9 @@
                     <a class="header-button" href="{% url 'todo:todo_list' %}">
                         My todo list
                     </a>
+                    <a class="header-button" href="{% url 'todo:trash_view' %}">
+                        Trash
+                    </a>
                     <form class="logout-form" method="POST" action="{% url 'users:logout' %}" style="display: inline;">
                         {% csrf_token %}
                         <input type="hidden" name="username" value="{{ request.user.username }}">

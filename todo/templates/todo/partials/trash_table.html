@@ -1,15 +1,5 @@
 {% if todos %}
-    <script>
-        function submitForm(todoId, todoState) {
-
-            document.getElementById('todo-id').value = todoId;
-            document.getElementById('todo-state').value = todoState;
-
-            document.getElementById('todo-form').submit();
-        }
-    </script>
-
-    <table class="todo-table">
+    <table class= "trash-table">
 
         <thead>
             <tr>
@@ -30,16 +20,6 @@
                         <td> {{ todo.title }}</td>
                         <td> {{ todo.created_at }}</td>
                         <td> {{ todo.state }}</td>
-
-                        <td>
-                            <form action="{% url 'todo:trash_todo' %}" method="post" novalidate>
-                                {% csrf_token %}
-                                <input type="hidden" name="id" value="{{ todo.id }}">
-                                <button type="submit" style="border: none; cursor: pointer;">
-                                    <i class="fa-regular fa-trash-can"></i>
-                                </button>
-                            </form>
-                        </td>
                     </tr>
             {% endfor %}
         </tbody>

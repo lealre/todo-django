@@ -60,6 +60,11 @@ body {
     /* min-width: 500px; */
 }
 
+h1 {
+    text-align: center;
+    color: #333;
+}
+
 /* Header */
 .main-header {
     justify-content: center;
@@ -107,11 +112,6 @@ body {
 }
 
 /* Todo table */
-h1 {
-    text-align: center;
-    color: #333;
-}
-
 table {
     width: 100%;
     border: 2px solid #ccc;
@@ -121,21 +121,21 @@ table {
     margin-top: 20px;
 }
 
-thead {
+.todo-table thead {
     display: none;
 }
 
-th, td {
+.todo-table th, td {
     border: none;
     padding: 8px;
     text-align: left;
 }
 
-th {
+.todo-table th {
     background-color: #f2f2f2;
 }
 
-tr:hover {
+.todo-table tr:hover {
     background-color: #f0f0f0;
     cursor: pointer;
 }
@@ -145,6 +145,11 @@ tr:hover {
     color: gray; 
     color: lightcoral;
 }
+
+ /* Trash table */
+ /* .trash-table {
+
+ } */
 
 /* Messages */
 .messages-containe {
