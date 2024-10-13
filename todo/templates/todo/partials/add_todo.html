@@ -1,0 +1,17 @@
+
+<form action="{% url 'todo:create' %}" method="post">
+    {% csrf_token %}
+    <div class="form-group">
+        {% for field in form %}
+
+            <label for="{{ field.id_for_label }}">{{ field.label }}:</label>
+            {{ field }}
+            {{ field.errors }}
+
+        {% endfor %}
+    </div>
+
+    <input type="hidden" name="username" value="{{ request.user.username }}">
+
+    <button type="submit">Send</button>
+</form>

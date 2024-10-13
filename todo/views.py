@@ -1,7 +1,7 @@
-from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.db.models import Case, When, IntegerField
 from django.http import HttpResponseBadRequest
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 
 from todo.forms import TodoForm
 from todo.models import Todo
@@ -13,7 +13,16 @@ def home(request):
 
 @login_required(login_url='users:login', redirect_field_name='next')
 def todo_view(request):
-    todos = Todo.objects.filter(author__username=request.user.username)
+    todos = Todo.objects.filter(
+        author__username=request.user.username,
+        state__in=['done', 'todo']
+    ).annotate(
+        order_field= Case(
+            When(state='done', then=1),
+            When(state='todo', then=0),
+            output_field=IntegerField(),
+        )
+    ).order_by('order_field', '-created_at')
 
     form = TodoForm()
     todo_form_data = request.session.get('todo_form_data', None)
@@ -42,8 +51,6 @@ def create_todo(request):
         todo.author = current_user
         form.save()
 
-        messages.success(request, 'ToDo added to List')
-
         del request.session['todo_form_data']
 
     return redirect('todo:todo_list')
@@ -55,9 +62,40 @@ def update_todo_state(request):
         new_state = request.POST.get('state')
 
         try:
-            todo = Todo.objects.get(id=todo_id)
+            todo = get_object_or_404(Todo, id=todo_id)
             todo.state = new_state
             todo.save()
+            return redirect('todo:todo_list')
+        except Todo.DoesNotExist:
+            return HttpResponseBadRequest('Todo not found.')
+
+    return HttpResponseBadRequest('Invalid request method.')
+
+
+@login_required(login_url='users:login', redirect_field_name='next')
+def trash_todo(request):
+    if request.method == 'POST':
+        todo_id = request.POST.get('id')
+
+        try:
+            todo = get_object_or_404(Todo, id=todo_id)
+            todo.state = 'trash' 
+            todo.save()
+            return redirect('todo:todo_list')
+        except Todo.DoesNotExist:
+            return HttpResponseBadRequest('Todo not found.')
+
+    return HttpResponseBadRequest('Invalid request method.')
+
+
+@login_required(login_url='users:login', redirect_field_name='next')
+def delete_todo(request):
+    if request.method == 'POST':
+        todo_id = request.POST.get('id')
+
+        try:
+            todo = Todo.objects.get(id=todo_id)
+            todo.delete()
             return redirect('todo:todo_list')
         except Todo.DoesNotExist:
             return HttpResponseBadRequest('Todo not found.')

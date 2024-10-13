@@ -8,6 +8,7 @@ class Todo(models.Model):
         TO_DO = 'todo'
         IN_PROGRESS = 'in_progress'
         DONE = 'done'
+        TRASH = 'trash'
 
     title = models.CharField(max_length=50)
     description = models.CharField(max_length=200, null=True, blank=True)

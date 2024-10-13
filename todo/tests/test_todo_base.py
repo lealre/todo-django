@@ -15,13 +15,17 @@ class TodoBase(TestCase):
         password='123456',
         email='username@email.com',
     ):
-        return User.objects.create_user(
+        user = User.objects.create_user(
             first_name=first_name,
             last_name=last_name,
             username=username,
             password=password,
             email=email,
         )
+
+        self.client.login(username=username, password=password)
+
+        return user
 
     def make_todo(
         self,
@@ -36,3 +40,6 @@ class TodoBase(TestCase):
             state=state,
             author=self.make_author(**author_data),
         )
+    
+    def exist_in_database(self, todo_id: int) -> bool:
+        return Todo.objects.filter(id=todo_id).exists()

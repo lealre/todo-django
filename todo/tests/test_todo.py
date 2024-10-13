@@ -16,7 +16,7 @@ class TodoUpdateStateTest(TodoBase):
 
         self.assertEqual(todo.state, 'done')
         self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, reverse('todo:home'))
+        self.assertRedirects(response, reverse('todo:todo_list'))
 
     def test_update_todo_with_wrong_method(self):
         self.make_todo()
@@ -43,3 +43,20 @@ class TodoUpdateStateTest(TodoBase):
 
         self.assertEqual(response.status_code, 400)
         self.assertIn(title_expected, content)
+
+    def test_delete_todo_successfully(self):
+        todo = self.make_todo()
+
+        response = self.client.post(
+            reverse('todo:delete_todo'),
+            data = {'id': todo.id}
+        )
+
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('todo:todo_list'))
+
+        todo.refresh_from_db()
+        is_deleted = self.exist_in_database(todo.id)
+        self.assertTrue(is_deleted)
+
+    # ToDo: test case where user is not loggedIn

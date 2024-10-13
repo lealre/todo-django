@@ -8,11 +8,17 @@ from django.urls import reverse
 from users.form import LoginForm
 
 
-def login_view(requests):
+def login_view(request):
     form = LoginForm()
 
+    if request.user.is_authenticated:
+        messages.warning(
+            request, f'You are already logged in as {request.user.username}'
+        )
+        return redirect(reverse('todo:home'))
+
     return render(
-        requests,
+        request,
         'users/pages/login.html',
         context={'form': form, 'form_action': reverse('users:validate_user')},
     )

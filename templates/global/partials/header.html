@@ -1,9 +1,12 @@
 <header class="main-header-container">
 
-    <div class="main-header container">
+    <div class="main-header">
         <h1>
             <a class="main-logo" href="{% url 'todo:home' %}">
-                <span class="main-logo-text">My Todos</span>
+                <span class="main-logo-text">
+                    <i class="fa-solid fa-list-check"></i>
+                    My Todos
+                </span>
             </a>
         </h1>
 
@@ -22,9 +25,8 @@
                         </button>
                     </form>
 
-
                 {% elif request.path == '/users/login/'%}
-                    <a class="header-button" href="{% url 'users:login' %}">
+                    <a>
                         &nbsp;  <!-- Non-breaking space to keep the link's size -->
                     </a>
                 {% else %}
@@ -32,7 +34,6 @@
                         Login
                     </a>
                 {% endif %}
-
 
         </div>
     </div>
