@@ -56,8 +56,9 @@ def create_todo(request):
 
         del request.session['todo_form_data']
 
-    return redirect('todo:todo_list')
-
+        return redirect('todo:todo_list')
+    
+    return HttpResponseBadRequest('Error creating the todo item.')
 
 @login_required(login_url='users:login', redirect_field_name='next')
 def update_todo_state(request):
@@ -83,9 +84,16 @@ def trash_todo(request):
 
         try:
             todo = Todo.objects.get(id=todo_id)
+
+            if todo.state == 'trash':
+                todo.state = 'todo'
+                todo.save()
+                return redirect('todo:trash_view')
+
             todo.state = 'trash'
             todo.save()
             return redirect('todo:todo_list')
+
         except Todo.DoesNotExist:
             return HttpResponseBadRequest('Todo not found.')
 
@@ -98,11 +106,7 @@ def trash_view(request):
         author__username=request.user.username, state='trash'
     )
 
-    return render(
-        request,
-        'todo/pages/trash.html',
-        context= {'todos': todos}
-    )
+    return render(request, 'todo/pages/trash.html', context={'todos': todos})
 
 
 @login_required(login_url='users:login', redirect_field_name='next')
@@ -113,7 +117,7 @@ def delete_todo(request):
         try:
             todo = Todo.objects.get(id=todo_id)
             todo.delete()
-            return redirect('todo:todo_list')
+            return redirect('todo:trash_view')
         except Todo.DoesNotExist:
             return HttpResponseBadRequest('Todo not found.')
 

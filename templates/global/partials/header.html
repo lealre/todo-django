@@ -5,7 +5,7 @@
             <a class="main-logo" href="{% url 'todo:home' %}">
                 <span class="main-logo-text">
                     <i class="fa-solid fa-list-check"></i>
-                    My Todos
+                    My ToDo's
                 </span>
             </a>
         </h1>
@@ -15,7 +15,7 @@
                 {% if request.user.is_authenticated %}
 
                     <a class="header-button" href="{% url 'todo:todo_list' %}">
-                        My todo list
+                        ToDo's
                     </a>
                     <a class="header-button" href="{% url 'todo:trash_view' %}">
                         Trash

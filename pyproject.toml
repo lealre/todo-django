@@ -48,22 +48,31 @@ python_files = [
   '*_test.py', 
   '*_tests.py'
 ]
-
 addopts = [
   "--doctest-modules",
   "--strict-markers",
   # "-rP",
   "-p no:warnings"
 ]
-
 markers = [
   "slow: Run tests that are slow",
   "fast: Run fast tests"
 ]
 
+[tool.coverage.run]
+include = [
+    "todo/*",
+    "users/*",
+]
+omit = [
+    "*/migrations/*",
+    "*/tests/*",
+    "*/__init__.py"
+]
+
 [tool.taskipy.tasks]
 pre_test = 'task lint'
-test = 'pytest --cov=todo --cov=users -v'
+test = 'pytest --cov -v'
 post_test = 'coverage html'
 lint = 'ruff check . && ruff check . --diff'
 format = 'ruff check . --fix && ruff format .'

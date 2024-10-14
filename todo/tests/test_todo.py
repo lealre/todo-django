@@ -47,6 +47,8 @@ class TodoViewTest(TodoBase):
     def test_update_todo_state_endpoint_not_authenticated(self):
         todo = self.make_todo(is_authenticated=False)
         new_state = 'done'
+        original_endpoint = reverse('todo:update_state')
+        endpoint_to_redirect = reverse('users:login')
 
         response = self.client.post(
             reverse('todo:update_state'),
@@ -55,7 +57,9 @@ class TodoViewTest(TodoBase):
         todo.refresh_from_db()
 
         self.assertEqual(response.status_code, 302)
-        redicrect_login_url = reverse('users:login') + '?next=/update_state'
+        redicrect_login_url = (
+            f'{endpoint_to_redirect}?next={original_endpoint}'
+        )
         self.assertRedirects(response, redicrect_login_url)
 
     def test_trash_todo_endpoint_successfully(self):
@@ -102,6 +106,8 @@ class TodoViewTest(TodoBase):
 
     def test_trash_todo_state_endpoint_not_authenticated(self):
         todo = self.make_todo(is_authenticated=False)
+        original_endpoint = reverse('todo:trash_todo')
+        endpoint_to_redirect = reverse('users:login')
 
         response = self.client.post(
             reverse('todo:trash_todo'),
@@ -110,7 +116,9 @@ class TodoViewTest(TodoBase):
         todo.refresh_from_db()
 
         self.assertEqual(response.status_code, 302)
-        redicrect_login_url = reverse('users:login') + '?next=/trash_todo'
+        redicrect_login_url = (
+            f'{endpoint_to_redirect}?next={original_endpoint}'
+        )
         self.assertRedirects(response, redicrect_login_url)
 
     # def test_delete_todo_successfully(self):

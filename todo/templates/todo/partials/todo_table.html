@@ -1,62 +1,60 @@
-{% if todos %}
-    <script>
-        function submitForm(todoId, todoState) {
+<div class = "content-container">
+    {% if todos %}
+        <script>
+            function submitForm(todoId, todoState) {
 
-            document.getElementById('todo-id').value = todoId;
-            document.getElementById('todo-state').value = todoState;
+                document.getElementById('todo-id').value = todoId;
+                document.getElementById('todo-state').value = todoState;
 
-            document.getElementById('todo-form').submit();
-        }
-    </script>
+                document.getElementById('todo-form').submit();
+            }
+        </script>
 
-    <table class="todo-table">
+        <table class="todo-table">
 
-        <thead>
-            <tr>
-                <th>Title</th>
-                <th>Description</th>
-                <th>State</th>
-                <th>Created at</th>
-                <th>Author</th>
-            </tr>
-        </thead>
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>State</th>
+                    <th>Created at</th>
+                    <th>Author</th>
+                </tr>
+            </thead>
 
+            <tbody>
+                {% for todo in todos%}
+                        <tr class="{% if todo.state == 'done' %}strikethrough{% endif %}" 
+                            onclick="submitForm({{ todo.id }}, '{% if todo.state != 'done' %}done{% else %}todo{% endif %}')"
+                        >
+                            <td> {{ todo.title }}</td>
+                            <td> {{ todo.created_at }}</td>
+                            <td>
+                                <form action="{% url 'todo:trash_todo' %}" method="post" novalidate>
+                                    {% csrf_token %}
+                                    <input type="hidden" name="id" value="{{ todo.id }}">
+                                    <button type="submit" style="border: none; cursor: pointer;">
+                                        <i class="fa-regular fa-trash-can"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                {% endfor %}
+            </tbody>
+            
+        </table>
 
-        <tbody>
-            {% for todo in todos%}
-                    <tr class="{% if todo.state == 'done' %}strikethrough{% endif %}" 
-                        onclick="submitForm({{ todo.id }}, '{% if todo.state != 'done' %}done{% else %}todo{% endif %}')"
-                    >
-                        <td> {{ todo.title }}</td>
-                        <td> {{ todo.created_at }}</td>
-                        <td> {{ todo.state }}</td>
-
-                        <td>
-                            <form action="{% url 'todo:trash_todo' %}" method="post" novalidate>
-                                {% csrf_token %}
-                                <input type="hidden" name="id" value="{{ todo.id }}">
-                                <button type="submit" style="border: none; cursor: pointer;">
-                                    <i class="fa-regular fa-trash-can"></i>
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-            {% endfor %}
-        </tbody>
+        <form id="todo-form" action="{% url 'todo:update_state' %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="id" id="todo-id">
+            <input type="hidden" name="state" id="todo-state">
+        </form>
         
-    </table>
-
-    <form id="todo-form" action="{% url 'todo:update_state' %}" method="post">
-        {% csrf_token %}
-        <input type="hidden" name="id" id="todo-id">
-        <input type="hidden" name="state" id="todo-state">
-    </form>
-
-    
-    {% else %}
-    
-    <div>
-        <h1>No Todos here 🥲</h1>
-    </div>
-    
+        {% else %}
+        
+        <div>
+            <h1>No Todos here 🥲</h1>
+        </div>
+        
     {% endif %}
+</div>

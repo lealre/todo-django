@@ -1,17 +1,15 @@
+<div class="todo-input-container">
+        <form action="{% url 'todo:create' %}" method="POST" class="todo-input-form">
+            {% csrf_token %}
+            <input 
+            type="search" class="todo-input-input" 
+            name="title" required 
+            placeholder="Add a ToDo...">
+            <input type="hidden" name="username" value="{{ request.user.username }}">
+            <button type="submit" class="todo-input-button">
+                <i class="fa-solid fa-plus"></i>
+            </button>
+        </form>
+</div>
 
-<form action="{% url 'todo:create' %}" method="post">
-    {% csrf_token %}
-    <div class="form-group">
-        {% for field in form %}
 
-            <label for="{{ field.id_for_label }}">{{ field.label }}:</label>
-            {{ field }}
-            {{ field.errors }}
-
-        {% endfor %}
-    </div>
-
-    <input type="hidden" name="username" value="{{ request.user.username }}">
-
-    <button type="submit">Send</button>
-</form>
