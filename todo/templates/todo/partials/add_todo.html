@@ -4,7 +4,8 @@
             <input 
             type="search" class="todo-input-input" 
             name="title" required 
-            placeholder="Add a ToDo...">
+            placeholder="Add a ToDo..."
+            maxlength="50">
             <input type="hidden" name="username" value="{{ request.user.username }}">
             <button type="submit" class="todo-input-button">
                 <i class="fa-solid fa-plus"></i>

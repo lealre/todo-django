@@ -9,9 +9,9 @@
         <h1>This is the Home</h1>
 
         {% if request.user.is_authenticated %}
-            <h1>You are already Logged In  as {{request.user.username}}</h1>
+            <h1>You are already logged in  as {{request.user.username}}.</h1>
         {% else %}
-            <h1>You are not Logged In</h1>  
+            <h1>You are not logged in.</h1>  
         {% endif %}
     </div>
 

@@ -46,5 +46,8 @@ class TodoBase(TestCase):
             ),
         )
 
-    def exist_in_database(self, todo_id: int) -> bool:  # noqa: PLR6301
-        return Todo.objects.filter(id=todo_id).exists()
+    def exist_in_database(self, id: int) -> bool:  # noqa: PLR6301
+        return Todo.objects.filter(id=id).exists()
+
+    def get_todo_by_id(self, id: int):  # noqa: PLR6301
+        return Todo.objects.get(id=id)
