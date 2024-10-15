@@ -11,5 +11,5 @@ urlpatterns = [
     path('todos/create/', views.create_todo, name='create'),
     path('todos/trashed/', views.trash_view, name='trash_view'),
     path('todos/trash/update', views.trash_todo, name='trash_todo'),
-    path('delete_todo', views.delete_todo, name='delete_todo'),
+    path('todos/trashed/delete', views.delete_todo, name='delete_todo'),
 ]

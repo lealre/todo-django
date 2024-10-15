@@ -57,8 +57,9 @@ def create_todo(request):
         del request.session['todo_form_data']
 
         return redirect('todo:todo_list')
-    
+
     return HttpResponseBadRequest('Error creating the todo item.')
+
 
 @login_required(login_url='users:login', redirect_field_name='next')
 def update_todo_state(request):

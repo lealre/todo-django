@@ -10,33 +10,36 @@
             </a>
         </h1>
 
-            <div class="header-buttons-container" >
-  
-                {% if request.user.is_authenticated %}
+        <div class="header-buttons-container" >
 
-                    <a class="header-button" href="{% url 'todo:todo_list' %}">
-                        ToDo's
-                    </a>
-                    <a class="header-button" href="{% url 'todo:trash_view' %}">
-                        Trash
-                    </a>
-                    <form class="logout-form" method="POST" action="{% url 'users:logout' %}" style="display: inline;">
-                        {% csrf_token %}
-                        <input type="hidden" name="username" value="{{ request.user.username }}">
-                        <button type="submit" class="header-button">
-                            Logout
-                        </button>
-                    </form>
+            {% if request.user.is_authenticated %}
 
-                {% elif request.path == '/users/login/'%}
-                    <a>
-                        &nbsp;  <!-- Non-breaking space to keep the link's size -->
-                    </a>
-                {% else %}
-                    <a class="header-button" href="{% url 'users:login' %}">
-                        Login
-                    </a>
-                {% endif %}
+                <a class="header-button" href="{% url 'todo:todo_list' %}">
+                    ToDo's
+                </a>
+                <a class="header-button" href="{% url 'todo:trash_view' %}">
+                    Trash
+                </a>
+                <form class="logout-form" method="POST" action="{% url 'users:logout' %}" style="display: inline;">
+                    {% csrf_token %}
+                    <input type="hidden" name="username" value="{{ request.user.username }}">
+                    <button type="submit" class="header-button">
+                        Logout
+                    </button>
+                </form>
+
+            {% elif request.path == '/users/login/'%}
+                <a class="header-button" href="{% url 'users:register' %}">
+                    Register
+                </a>
+            {% else %}
+                <a class="header-button" href="{% url 'users:register' %}">
+                    Register
+                </a>
+                <a class="header-button" href="{% url 'users:login' %}">
+                    Login
+                </a>
+            {% endif %}
 
         </div>
     </div>

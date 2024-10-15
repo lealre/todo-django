@@ -1,11 +1,12 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
+from django.http import HttpResponseBadRequest
 from django.shortcuts import redirect, render
 from django.urls import reverse
 
-from users.form import LoginForm
+from users.forms.login import LoginForm
+from users.forms.register_form import RegisterForm
 
 
 def login_view(request):
@@ -26,7 +27,7 @@ def login_view(request):
 
 def validate_user(request):
     if not request.POST:
-        return HttpResponse('Wrong method to url')
+        return HttpResponseBadRequest('Wrong method to url')
 
     form = LoginForm(request.POST)
 
@@ -65,3 +66,36 @@ def logout_view(request):
 
     home_url = reverse('todo:home')
     return redirect(home_url)
+
+
+def register_view(request):
+    register_form_data = request.session.get('register_form_data', None)
+    form = RegisterForm(register_form_data)
+
+    return render(
+        request,
+        'users/pages/register.html',
+        {
+            'form': form,
+            'form_action': reverse('users:register_validate'),
+        },
+    )
+
+
+def register_create(request):
+    if not request.POST:
+        return HttpResponseBadRequest('Invalid request method.')
+
+    POST = request.POST
+    request.session['register_form_data'] = POST
+    form = RegisterForm(POST)
+
+    if form.is_valid():
+        user = form.save(commit=False)
+        user.set_password(user.password)
+        user.save()
+        messages.success(request, 'Your user is created, please log in.')
+        del request.session['register_form_data']
+        return redirect(reverse('users:login'))
+
+    return redirect('users:register')

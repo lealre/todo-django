@@ -1,0 +1,43 @@
+{% extends 'global/base.html' %}
+
+{% block title %}Register | {% endblock title %}
+
+{% block content %}
+
+    <div class = "form-container">
+        <form id="registration-form" class="main-form" action="{{ form_action }}" method="POST">
+            {% csrf_token %}
+
+            <div class="form-content-grid">
+                {% for field in form %}
+                <div class="form-group">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{field}}
+                    {{ field.errors }}
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="form-button-container">
+                <button type="submit">Register</button>
+                <button type="button" class="clear-button" onclick="clearForm()">Clear Form</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        function clearForm() {
+            const form = document.getElementById('registration-form');
+            const inputs = form.querySelectorAll('input, textarea, select');
+        
+
+            inputs.forEach(input => {
+                input.value = '';
+            });
+        }
+    </script>
+
+
+  {% include "global/partials/messages.html" %}
+
+{% endblock content %}

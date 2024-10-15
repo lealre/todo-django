@@ -259,17 +259,29 @@ table {
 }
 
 /* forms */
+.form-container {
+    width: 75%;
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.form-container  form{
+    width: 100%;
+}
+
 .main-form {
     background-color: #fff;
     padding: 20px;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    max-width: 400px;
+    max-width: 800px;
     margin: 0 auto;
 }
 
 .form-content-grid {
     display: grid;
+    grid-template-columns: repeat(2, 1fr);
     gap: 15px;
 }
 
@@ -281,7 +293,7 @@ table {
 .form-group label {
     margin-bottom: 5px;
     font-weight: bold;
-    font-size: 14px;
+    font-size: 16px;
     color: #333;
 }
 
@@ -290,9 +302,10 @@ table {
 .form-group select,
 .form-group textarea {
     padding: 10px;
+    font-family: 'Consolas', monospace;
     border: 1px solid #ccc;
     border-radius: 4px;
-    font-size: 14px;
+    font-size: 16px;
     width: 100%;
     box-sizing: border-box;
     transition: border-color 0.3s ease;
@@ -306,8 +319,26 @@ table {
 
 .form-group .errorlist {
     color: #e74c3c;
-    font-size: 12px;
+    font-size: 14px;
     margin-top: 5px;
+}
+
+.form-button-container {
+    margin-top: 20px; /* Adjust top margin to add space between form and button */
+    padding: 10px 0;  /* Optional: Adjust padding around the button */
+    text-align: center; /* Center the button within the form */
+}
+
+/* Style the button in its default state */
+.form-container button {
+    background-color: #37474F; /* Dark blue-gray background */
+    color: white; /* White text */
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
 }
 
 /* Generics */
@@ -323,5 +354,9 @@ table {
 
     .form-group label {
         font-size: 13px;
+    }
+
+    .form-content-grid {
+        grid-template-columns: 1fr; /* Switch to one column on smaller screens */
     }
 }
