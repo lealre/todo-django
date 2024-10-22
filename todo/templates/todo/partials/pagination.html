@@ -1,0 +1,18 @@
+<div class="pagination-controls">
+    <!-- Previous page link -->
+    {% if todos.has_previous %}
+      <a href="?page={{ todos.previous_page_number }}"><i class="fa-solid fa-chevron-left"></i></a>
+    {% endif %}
+  
+    {% if todos %}
+    <!-- Current page / Total pages -->
+    <span> Page {{ todos.number }} of {{ todos.paginator.num_pages }}</span>
+    {% endif %}
+
+    <!-- Next page link -->
+    {% if todos.has_next %}
+      <a href="?page={{ todos.next_page_number }}">
+        <i class="fa-solid fa-chevron-right"></i>
+      </a>
+    {% endif %}
+</div>

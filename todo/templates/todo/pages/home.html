@@ -5,15 +5,21 @@
 
 {% block content %}
 
-    <div>
-        <h1>This is the Home</h1>
+<div>
+    <h1>This is the Home</h1>
 
-        {% if request.user.is_authenticated %}
-            <h1>You are already logged in  as {{request.user.username}}.</h1>
-        {% else %}
-            <h1>You are not logged in.</h1>  
-        {% endif %}
-    </div>
+    {% if request.user.is_authenticated %}
+        <h1>You are already logged in as {{ request.user.username }}.</h1>
+    {% else %}
+        <h1>You are not logged in.</h1>
+        Start by
+        <a href="{% url 'users:register' %}">creating a new user account</a> or
+        <a href="{% url 'users:login' %}">log in</a> if you already have one
+
+    {% endif %}
+
+</div>
+
 
     {% include "global/partials/messages.html" %}
 

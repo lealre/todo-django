@@ -20,22 +20,9 @@
 
             <div class="form-button-container">
                 <button type="submit">Register</button>
-                <button type="button" class="clear-button" onclick="clearForm()">Clear Form</button>
             </div>
         </form>
     </div>
-
-    <script>
-        function clearForm() {
-            const form = document.getElementById('registration-form');
-            const inputs = form.querySelectorAll('input, textarea, select');
-        
-
-            inputs.forEach(input => {
-                input.value = '';
-            });
-        }
-    </script>
 
 
   {% include "global/partials/messages.html" %}

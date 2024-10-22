@@ -4,6 +4,7 @@
 
 {% block content %}
 
+<div class = "form-container">
 <form class="main-form" action="{{ form_action }}" method="POST">
     {% csrf_token %}
 
@@ -17,8 +18,11 @@
       {% endfor %}
     </div>
 
-    <button type="submit">Login</button>
+    <div class="form-button-container">
+      <button type="submit">Login</button>
+    </div>
   </form>
+</div>
 
   {% include "global/partials/messages.html" %}
 

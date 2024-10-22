@@ -324,15 +324,14 @@ table {
 }
 
 .form-button-container {
-    margin-top: 20px; /* Adjust top margin to add space between form and button */
-    padding: 10px 0;  /* Optional: Adjust padding around the button */
-    text-align: center; /* Center the button within the form */
+    margin-top: 20px;
+    padding: 10px 0;
+    text-align: center;
 }
 
-/* Style the button in its default state */
 .form-container button {
-    background-color: #37474F; /* Dark blue-gray background */
-    color: white; /* White text */
+    background-color: #37474F;
+    color: white;
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
@@ -357,6 +356,6 @@ table {
     }
 
     .form-content-grid {
-        grid-template-columns: 1fr; /* Switch to one column on smaller screens */
+        grid-template-columns: 1fr;
     }
 }

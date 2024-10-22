@@ -1,10 +1,11 @@
 <div class = "content-container">
     {% if todos %}
         <script>
-            function submitForm(todoId, todoState) {
+            function submitForm(todoId, todoState, todoPage) {
 
                 document.getElementById('todo-id').value = todoId;
                 document.getElementById('todo-state').value = todoState;
+                document.getElementById('todo-page').value = todoPage;
 
                 document.getElementById('todo-form').submit();
             }
@@ -25,7 +26,7 @@
             <tbody>
                 {% for todo in todos%}
                         <tr class="{% if todo.state == 'done' %}strikethrough{% endif %}" 
-                            onclick="submitForm({{ todo.id }}, '{% if todo.state != 'done' %}done{% else %}todo{% endif %}')"
+                            onclick="submitForm({{ todo.id }}, '{% if todo.state != 'done' %}done{% else %}todo{% endif %}', {{todos.number}})"
                         >
                             <td> {{ todo.title }}</td>
                             <td> {{ todo.created_at }}</td>
@@ -48,12 +49,14 @@
             {% csrf_token %}
             <input type="hidden" name="id" id="todo-id">
             <input type="hidden" name="state" id="todo-state">
+            <input type="hidden" name="page" id="todo-page">
         </form>
         
         {% else %}
         
         <div>
-            <h1>No Todos here 🥲</h1>
+            <h1>No Todos Found</h1>
+            <p style="text-align: center;">It looks like you haven't added any tasks yet. Start by creating a new todo!</p>
         </div>
         
     {% endif %}
