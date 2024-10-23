@@ -1,10 +1,9 @@
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 from django.db.models import Case, IntegerField, When
 from django.http import HttpResponseBadRequest
 from django.shortcuts import redirect, render
-from django.core.paginator import Paginator
 from django.urls import reverse
-
 
 from todo.forms import TodoForm
 from todo.models import Todo
@@ -30,10 +29,9 @@ def todo_view(request):
         .order_by('order_field', '-created_at')
     )
 
-    # Implement pagination
-    paginator = Paginator(todos, 12)  # Show 10 todos per page
-    page_number = request.GET.get('page')  # Get the page number from the request
-    page_obj = paginator.get_page(page_number)  # Get the appropriate page of results
+    paginator = Paginator(todos, 12)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
 
     form = TodoForm()
     todo_form_data = request.session.get('todo_form_data', None)
@@ -93,6 +91,7 @@ def update_todo_state(request):
 def trash_todo(request):
     if request.method == 'POST':
         todo_id = request.POST.get('id')
+        page_number = request.POST.get('page', 1)
 
         try:
             todo = Todo.objects.get(id=todo_id)
@@ -104,7 +103,8 @@ def trash_todo(request):
 
             todo.state = 'trash'
             todo.save()
-            return redirect('todo:todo_list')
+            base_url = reverse('todo:todo_list')
+            return redirect(f'{base_url}?page={page_number}')
 
         except Todo.DoesNotExist:
             return HttpResponseBadRequest('Todo not found.')
@@ -118,7 +118,13 @@ def trash_view(request):
         author__username=request.user.username, state='trash'
     )
 
-    return render(request, 'todo/pages/trash.html', context={'todos': todos})
+    paginator = Paginator(todos, 12)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(
+        request, 'todo/pages/trash.html', context={'todos': page_obj}
+    )
 
 
 @login_required(login_url='users:login', redirect_field_name='next')

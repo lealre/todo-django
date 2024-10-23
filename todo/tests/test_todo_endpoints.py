@@ -70,7 +70,9 @@ class TodoEndpointsTest(TodoBase):
 
         self.assertEqual(todo.state, 'done')
         self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, reverse('todo:todo_list'))
+
+        url_to_redirect = reverse('todo:todo_list')
+        self.assertRedirects(response, f'{url_to_redirect}?page=1')
 
     def test_endpoint_update_todo_state_with_wrong_method(self):
         self.make_todo()
@@ -128,7 +130,8 @@ class TodoEndpointsTest(TodoBase):
 
         self.assertEqual(todo.state, expected_state)
         self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, reverse('todo:todo_list'))
+        url_to_redirect = reverse('todo:todo_list')
+        self.assertRedirects(response, f'{url_to_redirect}?page=1')
 
     def test_endpoint_trash_todo_with_wrong_method(self):
         self.make_todo()

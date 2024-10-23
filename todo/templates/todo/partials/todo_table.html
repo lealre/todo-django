@@ -34,6 +34,7 @@
                                 <form action="{% url 'todo:trash_todo' %}" method="post" novalidate>
                                     {% csrf_token %}
                                     <input type="hidden" name="id" value="{{ todo.id }}">
+                                    <input type="hidden" name="page" value="{{ todos.number }}">
                                     <button type="submit" style="border: none; cursor: pointer;">
                                         <i class="fa-regular fa-trash-can"></i>
                                     </button>

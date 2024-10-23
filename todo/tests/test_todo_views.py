@@ -36,4 +36,4 @@ class TodoViewTest(TodoBase):
         response = self.client.get(reverse('todo:home'))
         content = response.content.decode('utf-8')
 
-        self.assertIn(f'You are already logged in  as {username}.', content)
+        self.assertIn(f'You are already logged in as {username}.', content)
