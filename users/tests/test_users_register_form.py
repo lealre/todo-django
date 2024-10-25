@@ -3,7 +3,7 @@ from django.urls import reverse
 from parameterized import parameterized
 
 
-class UserResgisterFormTest(TestCase):
+class UsersResgisterFormTest(TestCase):
     def setUp(self, *args, **kwargs):
         self.form_data = {
             'username': 'user',
@@ -49,7 +49,7 @@ class UserResgisterFormTest(TestCase):
         response = self.client.post(
             reverse('users:register_validate'),
             data=self.form_data,
-            follow=True
+            follow=True,
         )
 
         self.assertIn(
@@ -67,7 +67,7 @@ class UserResgisterFormTest(TestCase):
         response = self.client.post(
             reverse('users:register_validate'),
             data=self.form_data,
-            follow=True
+            follow=True,
         )
 
         self.assertIn(
