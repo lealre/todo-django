@@ -54,7 +54,7 @@ def validate_user(request):
 @login_required(login_url='users:login', redirect_field_name='next')
 def logout_view(request):
     if not request.POST:
-        messages.error(request, 'Invalid logout request')
+        messages.error(request, 'Wrong method to url')
         return redirect(reverse('users:login'))
 
     if request.POST.get('username') != request.user.username:
