@@ -3,7 +3,7 @@ from django.urls import reverse
 from todo.tests.test_todo_base import TodoBase
 
 
-class TodoEndpointsTest(TodoBase):
+class TodoEndpointsTest(TodoBase):  # noqa: PLR0904
     def test_endpoint_create_todo_successfully(self):
         self.make_author()  # Authenticate first
         title_expected = 'test title'
@@ -121,6 +121,7 @@ class TodoEndpointsTest(TodoBase):
     def test_endpoint_trash_todo_successfully(self):
         todo = self.make_todo()
         expected_state = 'trash'
+        url_to_redirect = reverse('todo:todo_list')
 
         response = self.client.post(
             reverse('todo:trash_todo'),
@@ -130,7 +131,6 @@ class TodoEndpointsTest(TodoBase):
 
         self.assertEqual(todo.state, expected_state)
         self.assertEqual(response.status_code, 302)
-        url_to_redirect = reverse('todo:todo_list')
         self.assertRedirects(response, f'{url_to_redirect}?page=1')
 
     def test_endpoint_trash_todo_with_wrong_method(self):
@@ -181,6 +181,7 @@ class TodoEndpointsTest(TodoBase):
     def test_endpoint_trash_todo_restoring_from_trash_successfully(self):
         todo = self.make_todo(state='trash')
         expected_state = 'todo'
+        url_to_redirect = reverse('todo:trash_view')
 
         response = self.client.post(
             reverse('todo:trash_todo'),
@@ -190,10 +191,11 @@ class TodoEndpointsTest(TodoBase):
 
         self.assertEqual(todo.state, expected_state)
         self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, reverse('todo:trash_view'))
+        self.assertRedirects(response, f'{url_to_redirect}?page=1')
 
     def test_endpoint_delete_todo_from_trash_successfully(self):
         todo = self.make_todo(state='trash')
+        url_to_redirect = reverse('todo:trash_view')
 
         response = self.client.post(
             reverse('todo:delete_todo'),
@@ -203,7 +205,7 @@ class TodoEndpointsTest(TodoBase):
 
         self.assertFalse(is_todo_in_database)
         self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, reverse('todo:trash_view'))
+        self.assertRedirects(response, f'{url_to_redirect}?page=1')
 
     def test_endpoint_delete_todo_from_trash_with_wrong_method(self):
         self.make_todo(state='trash')
@@ -237,6 +239,9 @@ class TodoEndpointsTest(TodoBase):
         todo = self.make_todo(is_authenticated=False)
         original_endpoint = reverse('todo:delete_todo')
         endpoint_to_redirect = reverse('users:login')
+        redicrect_login_url = (
+            f'{endpoint_to_redirect}?next={original_endpoint}'
+        )
 
         response = self.client.post(
             reverse('todo:delete_todo'),
@@ -245,7 +250,60 @@ class TodoEndpointsTest(TodoBase):
         todo.refresh_from_db()
 
         self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, redicrect_login_url)
+
+    def test_endpoint_update_todo_title_successfully(self):
+        todo = self.make_todo()
+        new_todo_title = 'A new todo title'
+
+        response = self.client.post(
+            reverse('todo:update_title'),
+            data={'id': todo.id, 'title': new_todo_title},
+        )
+        todo.refresh_from_db()
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(todo.title, new_todo_title)
+
+    def test_endpoint_update_todo_title_with_wrong_method(self):
+        self.make_todo()
+        title_expected = 'Invalid request method.'
+
+        response = self.client.get(
+            reverse('todo:update_title'),
+        )
+
+        content = response.content.decode('utf-8')
+
+        self.assertEqual(response.status_code, 400)
+        self.assertIn(title_expected, content)
+
+    def test_endpoint_update_todo_title_not_authenticated(self):
+        todo = self.make_todo(is_authenticated=False)
+        original_endpoint = reverse('todo:update_title')
+        endpoint_to_redirect = reverse('users:login')
         redicrect_login_url = (
             f'{endpoint_to_redirect}?next={original_endpoint}'
         )
+
+        response = self.client.post(
+            original_endpoint, data={'id': todo.id, 'title': 'some title'}
+        )
+
+        self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, redicrect_login_url)
+
+    def test_endpoint_update_todo_title_with_id_non_existing(self):
+        todo = self.make_todo()
+        title_expected = 'Todo not found.'
+
+        response = self.client.post(
+            reverse('todo:update_title'),
+            data={'id': todo.id + 100},
+        )
+        todo.refresh_from_db()
+
+        content = response.content.decode('utf-8')
+
+        self.assertEqual(response.status_code, 400)
+        self.assertIn(title_expected, content)

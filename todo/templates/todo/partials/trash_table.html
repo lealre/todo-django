@@ -1,58 +1,64 @@
-<div class = "content-container">
-    {% if todos %}
-        <table class= "trash-table">
+<div class="content-container">
+  {% if todos %}
+  <table class="trash-table">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Created at</th>
+        <th>Excluded at</th>
+      </tr>
+    </thead>
 
-            <thead>
-                <tr>
-                    <th>Title</th>
-                    <th>Created at</th>
-                    <th>Excluded at</th>
-                </tr>
-            </thead>
+    <tbody>
+      {% for todo in todos%}
+      <tr>
+        <td>{{ todo.title }}</td>
+        <td>{{ todo.created_at }}</td>
+        <td>{{ todo.updated_at }}</td>
+        <td>
+          <div style="display: flex; gap: 10px">
+            <form action="{% url 'todo:trash_todo' %}" method="post" novalidate>
+              {% csrf_token %}
+              <input type="hidden" name="id" value="{{ todo.id }}" />
+              <input type="hidden" name="page" value="{{ todos.number }}" />
+              <button
+                type="submit"
+                style="cursor: pointer"
+                title="Restore Todo"
+              >
+                <i class="fa-solid fa-recycle"></i>
+              </button>
+            </form>
+            <form
+              action="{% url 'todo:delete_todo' %}"
+              method="post"
+              novalidate
+            >
+              {% csrf_token %}
+              <input type="hidden" name="id" value="{{ todo.id }}" />
+              <input type="hidden" name="page" value="{{ todos.number }}" />
+              <button type="submit" style="cursor: pointer" title="Delete Todo">
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+            </form>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 
+  <form id="todo-form" action="{% url 'todo:update_state' %}" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="id" id="todo-id" />
+    <input type="hidden" name="state" id="todo-state" />
+  </form>
 
-            <tbody>
-                {% for todo in todos%}
-                        <tr>
-                            <td> {{ todo.title }}</td>
-                            <td> {{ todo.created_at }}</td>
-                            <td> {{ todo.updated_at }}</td>
-                            <td> 
-                                <div style="display: flex; gap: 10px;">
-                                    <form action="{% url 'todo:trash_todo' %}" method="post" novalidate>
-                                        {% csrf_token %}
-                                        <input type="hidden" name="id" value="{{ todo.id }}">
-                                        <button type="submit" style="cursor: pointer;" title="Restore Todo">
-                                            <i class="fa-solid fa-recycle"></i>
-                                        </button>
-                                    </form>
-                                    <form action="{% url 'todo:delete_todo' %}" method="post" novalidate>
-                                        {% csrf_token %}
-                                        <input type="hidden" name="id" value="{{ todo.id }}">
-                                        <button type="submit" style="cursor: pointer;" title="Delete Todo">
-                                            <i class="fa-solid fa-xmark"></i>
-                                        </button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                {% endfor %}
-            </tbody>
-            
-        </table>
+  {% else %}
 
-        <form id="todo-form" action="{% url 'todo:update_state' %}" method="post">
-            {% csrf_token %}
-            <input type="hidden" name="id" id="todo-id">
-            <input type="hidden" name="state" id="todo-state">
-        </form>
+  <div>
+    <h1>No Todos Found</h1>
+  </div>
 
-        
-        {% else %}
-        
-        <div>
-            <h1>No Todos Found</h1>
-        </div>
-        
-    {% endif %}
+  {% endif %}
 </div>

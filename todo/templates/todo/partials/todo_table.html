@@ -1,64 +1,120 @@
-<div class = "content-container">
-    {% if todos %}
-        <script>
-            function submitForm(todoId, todoState, todoPage) {
+<div class="content-container">
+  {% if todos %}
+  <table class="todo-table">
+    <thead>
+      <tr>
+        <th>Title</th>
+      </tr>
+    </thead>
 
-                document.getElementById('todo-id').value = todoId;
-                document.getElementById('todo-state').value = todoState;
-                document.getElementById('todo-page').value = todoPage;
-
-                document.getElementById('todo-form').submit();
-            }
-        </script>
-
-        <table class="todo-table">
-
-            <thead>
-                <tr>
-                    <th>Title</th>
-                    <th>Description</th>
-                    <th>State</th>
-                    <th>Created at</th>
-                    <th>Author</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                {% for todo in todos%}
-                        <tr class="{% if todo.state == 'done' %}strikethrough{% endif %}" 
-                            onclick="submitForm({{ todo.id }}, '{% if todo.state != 'done' %}done{% else %}todo{% endif %}', {{todos.number}})"
-                        >
-                            <td> {{ todo.title }}</td>
-                            <td> {{ todo.created_at }}</td>
-                            <td>
-                                <form action="{% url 'todo:trash_todo' %}" method="post" novalidate>
-                                    {% csrf_token %}
-                                    <input type="hidden" name="id" value="{{ todo.id }}">
-                                    <input type="hidden" name="page" value="{{ todos.number }}">
-                                    <button type="submit" style="border: none; cursor: pointer;">
-                                        <i class="fa-regular fa-trash-can"></i>
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
-                {% endfor %}
-            </tbody>
-            
-        </table>
-
-        <form id="todo-form" action="{% url 'todo:update_state' %}" method="post">
+    <tbody>
+      {% for todo in todos%}
+      <tr
+        class="{% if todo.state == 'done' %}strikethrough{% endif %}"
+        onclick="submitForm({{ todo.id }}, '{% if todo.state != 'done' %}done{% else %}todo{% endif %}', {{todos.number}})"
+      >
+        <td>{{ todo.title }}</td>
+        <td>{{ todo.created_at }}</td>
+        <td>
+          <button
+            class="open-modal"
+            style="border: none; cursor: pointer"
+            data-id="{{ todo.id }}"
+          >
+            <i class="fa-solid fa-pen-to-square"></i>
+          </button>
+        </td>
+        <td>
+          <form action="{% url 'todo:trash_todo' %}" method="post" novalidate>
             {% csrf_token %}
-            <input type="hidden" name="id" id="todo-id">
-            <input type="hidden" name="state" id="todo-state">
-            <input type="hidden" name="page" id="todo-page">
-        </form>
-        
-        {% else %}
-        
-        <div>
-            <h1>No Todos Found</h1>
-            <p style="text-align: center;">It looks like you haven't added any tasks yet. Start by creating a new todo!</p>
-        </div>
-        
-    {% endif %}
+            <input type="hidden" name="id" value="{{ todo.id }}" />
+            <input type="hidden" name="page" value="{{ todos.number }}" />
+            <button type="submit" style="border: none; cursor: pointer">
+              <i class="fa-regular fa-trash-can"></i>
+            </button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <form id="todo-form" action="{% url 'todo:update_state' %}" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="id" id="todo-id" />
+    <input type="hidden" name="state" id="todo-state" />
+    <input type="hidden" name="page" id="todo-page" />
+  </form>
+
+  {% else %}
+
+  <div>
+    <h1>No Todos Found</h1>
+    <p style="text-align: center">
+      It looks like you haven't added any tasks yet. Start by creating a new
+      todo!
+    </p>
+  </div>
+
+  {% endif %}
 </div>
+
+<div id="myModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2>Edit your todo...</h2>
+    <form action="{% url 'todo:update_title' %}" method="post" novalidate>
+      {% csrf_token %}
+      <input type="hidden" name="id" id="modal-todo-id" />
+      <input type="hidden" name="page" value="{{ todos.number }}" />
+      <div class="form-group">
+        <input
+          type="text"
+          name="title"
+          id="modal-todo-title"
+          maxlength="50"
+          required
+        />
+      </div>
+      <div class="form-button-container">
+        <button type="submit">Save</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  // Send post to update todo state
+  function submitForm(todoId, todoState, todoPage) {
+    document.getElementById("todo-id").value = todoId;
+    document.getElementById("todo-state").value = todoState;
+    document.getElementById("todo-page").value = todoPage;
+    document.getElementById("todo-form").submit();
+  }
+
+  // Open the modal to update todo
+  const modal = document.getElementById("myModal");
+  const closeBtn = document.getElementsByClassName("close")[0];
+  const openModalButtons = document.getElementsByClassName("open-modal");
+
+  Array.from(openModalButtons).forEach((button) => {
+    button.onclick = function (event) {
+      event.stopPropagation();
+      modal.style.display = "block";
+
+      const todoId = button.getAttribute("data-id");
+      const modalTodoIdField = document.getElementById("modal-todo-id");
+      modalTodoIdField.value = todoId;
+    };
+  });
+
+  closeBtn.onclick = function () {
+    modal.style.display = "none";
+  };
+
+  window.onclick = function (event) {
+    if (event.target === modal) {
+      modal.style.display = "none";
+    }
+  };
+</script>

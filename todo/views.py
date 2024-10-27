@@ -99,7 +99,8 @@ def trash_todo(request):
             if todo.state == 'trash':
                 todo.state = 'todo'
                 todo.save()
-                return redirect('todo:trash_view')
+                base_url = reverse('todo:trash_view')
+                return redirect(f'{base_url}?page={page_number}')
 
             todo.state = 'trash'
             todo.save()
@@ -131,11 +132,32 @@ def trash_view(request):
 def delete_todo(request):
     if request.method == 'POST':
         todo_id = request.POST.get('id')
+        page_number = request.POST.get('page', 1)
 
         try:
             todo = Todo.objects.get(id=todo_id)
             todo.delete()
-            return redirect('todo:trash_view')
+            base_url = reverse('todo:trash_view')
+            return redirect(f'{base_url}?page={page_number}')
+        except Todo.DoesNotExist:
+            return HttpResponseBadRequest('Todo not found.')
+
+    return HttpResponseBadRequest('Invalid request method.')
+
+
+@login_required(login_url='users:login', redirect_field_name='next')
+def update_todo_title(request):
+    if request.method == 'POST':
+        todo_id = request.POST.get('id')
+        page_number = request.POST.get('page', 1)
+        new_title = request.POST.get('title')
+
+        try:
+            todo = Todo.objects.get(id=todo_id)
+            todo.title = new_title
+            todo.save()
+            base_url = reverse('todo:todo_list')
+            return redirect(f'{base_url}?page={page_number}')
         except Todo.DoesNotExist:
             return HttpResponseBadRequest('Todo not found.')
 

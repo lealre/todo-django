@@ -1,20 +1,19 @@
-{% extends 'global/base.html' %}
+{% extends 'global/base.html' %} 
 
 {% block title %}Login | {% endblock title %}
 
 {% block content %}
 
-<div class = "form-container">
-<form class="main-form" action="{{ form_action }}" method="POST">
+<div class="form-container">
+  <form class="main-form" action="{{ form_action }}" method="POST">
     {% csrf_token %}
 
     <div class="form-content form-content-grid">
       {% for field in form %}
-        <div class="form-group">
-          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-          {{field}}
-          {{ field.errors }}
-        </div>
+      <div class="form-group">
+        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {{field}} {{ field.errors }}
+      </div>
       {% endfor %}
     </div>
 
@@ -24,6 +23,6 @@
   </form>
 </div>
 
-  {% include "global/partials/messages.html" %}
+{% include "global/partials/messages.html" %} 
 
 {% endblock content %}
