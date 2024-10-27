@@ -1,7 +1,7 @@
 <div class="content-container">
   {% if todos %}
   <table class="todo-table">
-    <thead>
+    <thead class = "todo-table-head">
       <tr>
         <th>Title</th>
       </tr>
@@ -13,23 +13,25 @@
         class="{% if todo.state == 'done' %}strikethrough{% endif %}"
         onclick="submitForm({{ todo.id }}, '{% if todo.state != 'done' %}done{% else %}todo{% endif %}', {{todos.number}})"
       >
-        <td>{{ todo.title }}</td>
-        <td>{{ todo.created_at }}</td>
-        <td>
+        <td class = "todo-table-column-title">{{ todo.title }}</td>
+        <td class = "todo-table-column-date">{{ todo.created_at|date:"Y-m-d H:i"  }}</td>
+        <td class = "todo-table-column-edit">
           <button
             class="open-modal"
-            style="border: none; cursor: pointer"
+            style=" cursor: pointer"
+            title = "Edit todo"
             data-id="{{ todo.id }}"
+            data-title="{{ todo.title }}"
           >
             <i class="fa-solid fa-pen-to-square"></i>
           </button>
         </td>
-        <td>
+        <td class = "todo-table-column-delete">
           <form action="{% url 'todo:trash_todo' %}" method="post" novalidate>
             {% csrf_token %}
             <input type="hidden" name="id" value="{{ todo.id }}" />
             <input type="hidden" name="page" value="{{ todos.number }}" />
-            <button type="submit" style="border: none; cursor: pointer">
+            <button type="submit" style=" cursor: pointer" title= "Move to Trash">
               <i class="fa-regular fa-trash-can"></i>
             </button>
           </form>
@@ -63,7 +65,7 @@
   <div class="modal-content">
     <span class="close">&times;</span>
     <h2>Edit your todo...</h2>
-    <form action="{% url 'todo:update_title' %}" method="post" novalidate>
+    <form action="{% url 'todo:update_title' %}" method="post">
       {% csrf_token %}
       <input type="hidden" name="id" id="modal-todo-id" />
       <input type="hidden" name="page" value="{{ todos.number }}" />
@@ -96,6 +98,8 @@
   const modal = document.getElementById("myModal");
   const closeBtn = document.getElementsByClassName("close")[0];
   const openModalButtons = document.getElementsByClassName("open-modal");
+  const modalTodoIdField = document.getElementById("modal-todo-id");
+  const modalTodoTitleField = document.getElementById("modal-todo-title");
 
   Array.from(openModalButtons).forEach((button) => {
     button.onclick = function (event) {
@@ -103,8 +107,10 @@
       modal.style.display = "block";
 
       const todoId = button.getAttribute("data-id");
-      const modalTodoIdField = document.getElementById("modal-todo-id");
+      const todoTitle = button.getAttribute("data-title");
+
       modalTodoIdField.value = todoId;
+      modalTodoTitleField.value = todoTitle;
     };
   });
 
