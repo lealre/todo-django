@@ -1,3 +1,19 @@
+//  ------- TRASH TODO TABLE ------------
+
+// trash table
+document.addEventListener("DOMContentLoaded", function () {
+  const deleteTodos = document.querySelectorAll(".delete-todo");
+  for (const todo of deleteTodos) {
+    todo.addEventListener("submit", function (e) {
+      e.preventDefault();
+      const confirmed = confirm("Are you sure you want to delete this to-do?");
+      if (confirmed) {
+        e.currentTarget.submit();
+      }
+    });
+  }
+});
+
 // -------- TODO TABLE -----------
 
 // Send post to update todo state
@@ -38,16 +54,4 @@ window.onclick = function (event) {
   }
 };
 
-//  ------- TRASH TODO TABLE ------------
 
-// trash table
-const deleteTodos = document.querySelectorAll(".delete-todo");
-for (const todo of deleteTodos) {
-  todo.addEventListener("submit", function (e) {
-    e.preventDefault();
-    const confirmed = confirm("Are you sure you want to delete this to-do?");
-    if (confirmed) {
-      e.currentTarget.submit();
-    }
-  });
-}

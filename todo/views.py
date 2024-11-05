@@ -26,7 +26,7 @@ def todo_view(request):
                 output_field=IntegerField(),
             )
         )
-        .order_by('order_field', '-created_at')
+        .order_by('order_field', '-created_at', 'id')
     )
 
     paginator = Paginator(todos, 12)
