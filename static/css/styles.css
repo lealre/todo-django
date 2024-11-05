@@ -195,8 +195,8 @@ td {
 
 .todo-table td {
   overflow: hidden;
-  text-overflow: ellipsis; /* Truncates text if it exceeds the column width */
-  white-space: nowrap; /* Prevents text from wrapping */
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .todo-table th {
@@ -215,27 +215,28 @@ td {
 
 /* Set specific widths for each column */
 .todo-table-column-title {
-  width: 70%; 
+  width: 70%;
 }
 
 .todo-table-column-date {
-  width: 20%; 
+  width: 20%;
 }
 
-.todo-table-column-edit, .todo-table-column-delete {
-  width: 5%; 
+.todo-table-column-edit,
+.todo-table-column-delete {
+  width: 5%;
 }
 
 .trash-table-column-title {
-  width: 60%; 
+  width: 60%;
 }
 
 .trash-table-column-date {
-  width: 30%; 
+  width: 30%;
 }
 
-.trash-table-column-options{
-  width: 10%; 
+.trash-table-column-options {
+  width: 10%;
 }
 
 /* Messages */
